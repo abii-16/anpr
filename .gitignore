@@ -1,0 +1,28 @@
+# Python cache
+__pycache__/
+.ipynb_checkpoints/
+
+# Training datasets
+dataset/
+
+# YOLO output folders
+runs/
+ultralytics/runs/
+
+# Model weights
+*.pt
+*.pth
+
+# Videos
+*.mp4
+*.avi
+*.mov
+
+# Generated outputs
+static/videos/
+
+# Temporary logs
+*.log
+
+
+sort/
