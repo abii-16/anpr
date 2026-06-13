@@ -72,6 +72,37 @@ automatic_number_plate_detection/
 
 :contentReference[oaicite:3]{index=3}
 
+## Screenshots
+
+### 🏠 Home Page
+
+<p align="center">
+  <img src="screenshots/Picture1.png" width="800">
+</p>
+
+The main interface for uploading surveillance videos.
+
+---
+
+### 🚗 Detected License Plates
+
+<p align="center">
+  <img src="screenshots/Picture2.png" width="800">
+</p>
+
+Detected license plates with timestamps extracted from the video.
+
+---
+
+### 🎯 Detection Results
+
+<p align="center">
+  <img src="screenshots/Picture3.png" width="45%">
+  <img src="screenshots/Picture4.png" width="45%">
+</p>
+
+License plate detection results using YOLOv8 and EasyOCR.
+
 ## Installation
 
 ### Clone the Repository
