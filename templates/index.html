@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ANPR Web App</title>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #4cc9f0;
+      --gray: #6c757d;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+      background-color: #f5f7ff;
+      color: var(--dark);
+    }
+    
+    .left {
+      flex: 2;
+      padding: 30px;
+      background-color: white;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    }
+    
+    .right {
+      flex: 1;
+      padding: 30px;
+      background-color: var(--light);
+    }
+    
+    h2 {
+      color: var(--primary);
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
+    
+    h3 {
+      color: var(--secondary);
+      margin-top: 25px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      border-bottom: 2px solid var(--secondary);
+      padding-bottom: 8px;
+    }
+    
+    form {
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    input[type="file"] {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      background-color: #fafafa;
+      transition: all 0.3s;
+    }
+    
+    input[type="file"]:hover {
+      border-color: var(--primary);
+      background-color: #f0f4ff;
+    }
+    
+    button[type="submit"] {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+      width: 100%;
+      font-size: 16px;
+    }
+    
+    button[type="submit"]:hover {
+      background-color: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+    }
+    
+    .plate {
+      background: white;
+      margin: 8px 0;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      color: var(--secondary);
+      border-left: 4px solid var(--primary);
+    }
+    
+    .download-link {
+      margin-top: 15px;
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: var(--success);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.3s;
+      margin-right: 10px;
+    }
+    
+    .download-link:hover {
+      background-color: #3aa8d8;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(76, 201, 240, 0.3);
+    }
+    
+    #processing {
+      color: var(--success);
+      font-weight: 600;
+      margin-top: 20px;
+      display: none;
+      padding: 15px;
+      background-color: rgba(76, 201, 240, 0.1);
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .downloads-container {
+      margin-top: 30px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .no-plates {
+      color: var(--gray);
+      font-style: italic;
+      padding: 15px;
+      background-color: white;
+      border-radius: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="left">
+    <h2>Automatic Number Plate Recognition</h2>
+    <form method="POST" enctype="multipart/form-data" onsubmit="showProcessing()">
+      <input type="file" name="video" accept=".mp4" required>
+      <button type="submit">Upload & Detect</button>
+    </form>
+
+    <div id="processing">⏳ Processing the video, please wait...</div>
+
+    {% if video_download or text_download %}
+      <div class="downloads-container">
+        <h3>Download Results</h3>
+        {% if video_download %}
+          <a class="download-link" href="{{ url_for('serve_video', filename=video_download) }}" download>📥 Download Output Video</a>
+        {% endif %}
+        {% if text_download %}
+          <a class="download-link" href="{{ url_for('serve_video', filename=text_download) }}" download>📥 Download Plate Data (TXT)</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="right">
+    <h3>Detected License Plates</h3>
+    {% if plates %}
+      {% for plate, time in plates %}
+        <div class="plate">{{ plate }} <span style="color: gray;">at {{ time }} (mm:ss)</span></div>
+      {% endfor %}
+    {% else %}
+      <div class="no-plates">No license plates detected yet</div>
+    {% endif %}
+  </div>
+
+  <script>
+    function showProcessing() {
+      document.getElementById('processing').style.display = 'block';
+    }
+  </script>
+</body>
+
+</html>
